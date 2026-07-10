@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamsa Beauty - Sudan's Premium Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #fffaf9;
+        }
+
+        /* Modal Overlay styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .product-card {
+            transition: all 0.4s ease;
+            border: 1px solid #f3e8e6;
+            background-color: #ffffff;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(180, 140, 130, 0.2);
+        }
+
+        .header-bg {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #f3e8e6;
+        }
+
+        .accent-color { color: #b48c82; }
+        .accent-bg { background-color: #b48c82; }
+        .accent-hover:hover { background-color: #9a756b; }
+        .text-luxury { color: #4a3733; }
+
+        .category-btn.active {
+            background-color: #b48c82;
+            color: white;
+            box-shadow: 0 4px 12px rgba(180, 140, 130, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="header-bg sticky top-0 z-20">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <h1 class="text-3xl font-extrabold text-luxury tracking-tighter italic cursor-pointer">LAMSA</h1>
+                <div class="hidden md:flex gap-4">
+                    <button onclick="filterCategory('all')" class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium transition" id="cat-all">All</button>
+                    <button onclick="filterCategory('eyes')" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium transition text-gray-500 hover:text-luxury" id="cat-eyes">Eyes</button>
+                    <button onclick="filterCategory('lips')" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium transition text-gray-500 hover:text-luxury" id="cat-lips">Lips</button>
+                    <button onclick="filterCategory('face')" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium transition text-gray-500 hover:text-luxury" id="cat-face">Face</button>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div id="auth-section">
+                    <button id="open-auth-btn" class="accent-bg text-white px-6 py-2 rounded-full text-sm font-bold shadow-md hover:opacity-90 transition">Login</button>
+                </div>
+                <div id="user-section" class="hidden flex items-center gap-3">
+                    <span id="username-display" class="text-sm font-bold text-luxury underline">Welcome</span>
+                    <button onclick="logout()" class="text-red-400 text-xs hover:underline">Logout</button>
+                </div>
+
+                <button id="open-cart-btn" class="relative p-3 rounded-full bg-rose-50 text-luxury hover:bg-rose-100 transition duration-200">
+                    <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-amber-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="container mx-auto px-4 pt-12 pb-8 text-center">
+        <div class="max-w-3xl mx-auto">
+            <span class="text-amber-700 font-medium tracking-widest text-sm uppercase mb-4 block">Sudan's Premier Beauty Hub</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-luxury mb-4 leading-tight">Authentic Lamsa Sparkle</h2>
+            <p class="text-gray-500">Discover premium cosmetics curated for your unique beauty.</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-6">
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            </div>
+    </main>
+
+    <footer class="bg-white border-t border-rose-100 pt-16 pb-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-extrabold text-luxury italic">LAMSA</h2>
+                    <p class="text-gray-500 text-sm">Providing global beauty standards to the heart of Khartoum.</p>
+
+                    <div class="flex gap-4 pt-4">
+                        <a href="" target="_blank" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-luxury hover:bg-[#b48c82] hover:text-white transition shadow-sm">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="" target="_blank" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-luxury hover:bg-[#b48c82] hover:text-white transition shadow-sm">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="" target="_blank" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-luxury hover:bg-[#b48c82] hover:text-white transition shadow-sm">
+                        <i data-lucide="music-2" class="w-5 h-5"></i>
+                        </a>
+                        <a href="" target="_blank" class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-luxury hover:bg-[#b48c82] hover:text-white transition shadow-sm">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        </div>
+                </div>
+                <div>
+                    <h4 class="text-luxury font-bold mb-6">Policies</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-[#b48c82]">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-[#b48c82]">Shipping & Returns</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-luxury font-bold mb-6">Contact Us</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li class="flex items-center gap-3"><i data-lucide="map-pin" class="w-4 h-4"></i> Street 15, Khartoum, Sudan</li>
+                        <li class="flex items-center gap-3"><i data-lucide="phone" class="w-4 h-4"></i> +249 900 000 000</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="text-center text-xs text-gray-400 border-t pt-8">
+                &copy; 2025 Lamsa Beauty Sudan. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+            <div class="flex justify-between items-center p-6 border-b bg-rose-50/30">
+                <h3 class="text-xl font-bold text-luxury">My Bag</h3>
+                <button id="close-cart-btn" class="p-2 text-gray-400 hover:text-red-500"><i data-lucide="x"></i></button>
+            </div>
+            <div id="cart-items" class="flex-grow p-6 overflow-y-auto">
+                </div>
+            <div class="p-8 border-t bg-gray-50">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-gray-600">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-luxury">0 SDG</span>
+                </div>
+                <button id="checkout-btn" class="w-full accent-bg text-white py-4 rounded-full font-bold shadow-lg hover:opacity-90 transition">Checkout</button>
+            </div>
+        </div>
+    </div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black/20 z-40 hidden backdrop-blur-sm"></div>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md relative">
+            <button id="close-auth" class="absolute top-4 right-4 text-gray-400"><i data-lucide="x"></i></button>
+            <h3 class="text-2xl font-bold text-center mb-6 text-luxury">Account Login</h3>
+            <div class="space-y-4">
+                <input type="email" placeholder="Email Address" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-rose-200">
+                <input type="password" placeholder="Password" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-rose-200">
+                <button onclick="processLogin()" class="w-full accent-bg text-white py-3 rounded-xl font-bold">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="modal-overlay">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-xl relative">
+            <button id="close-checkout" class="absolute top-4 right-4 text-gray-400"><i data-lucide="x"></i></button>
+            <h3 class="text-2xl font-bold text-luxury mb-6 text-center">Shipping Details</h3>
+            <div class="space-y-4">
+                <input type="text" placeholder="Full Name" class="w-full p-3 border rounded-xl">
+                <input type="text" placeholder="Khartoum Delivery Address" class="w-full p-3 border rounded-xl">
+                <input type="tel" placeholder="Phone Number (+249)" class="w-full p-3 border rounded-xl">
+                <div id="checkout-summary" class="bg-rose-50 p-4 rounded-xl text-sm font-bold text-center"></div>
+                <button onclick="confirmOrder()" class="w-full accent-bg text-white py-4 rounded-xl font-bold">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Product Data
+        const products = [
+            { id: 1, category: 'lips', name: 'Velvet Lipstick', price: 15000, description: 'Creamy, long-lasting matte formula.', image: 'https://media.istockphoto.com/id/1458639401/photo/red-lipstick-close-up-on-pink-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=eem65oPoDCW2mr9WN2cQ-bR3qJu8OfDy2kn9fXrr5Es=' },
+            { id: 2, category: 'lips', name: 'Glossy Lip Oil', price: 12000, description: 'Deep hydration with high shine.', image: 'https://images.unsplash.com/photo-1687195821497-fed0346cdc34?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGxpcCUyMGdsb3NzfGVufDB8fDB8fHww' },
+            { id: 3, category: 'lips', name: 'Lip Liner', price: 9000, description: 'Used to define and shape lips', image: 'https://th.bing.com/th/id/OIP.Fi2coFX1qua9qFB9Oyy7rAHaHa?w=204&h=204&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+            { id: 4, category: 'lips', name: 'Lip Tint', price: 7000, description: 'Light color wash gives natural tint; comes sheer, buildable, or long-lasting', image: 'https://th.bing.com/th?id=OIF.bgVOov%2bjlSxF2c6Wh8HmMg&w=182&h=185&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+            { id: 5, category: 'Lips', name: 'Lip Scrub', price: 14000, description: 'Textured exfoliant smooths lips; comes sugar, salt, or gentle formulas', image: 'https://th.bing.com/th/id/OIP.nqYdR8wXKxYrBlKR-Rnd_AHaHa?w=277&h=208&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+            { id: 6, category: 'lips', name: 'Lip Combos', price: 13000, description: 'Sets bundle essentials together; comes with lipstick, gloss, and liner', image: 'https://th.bing.com/th/id/OIF.FyrqRwL1d5WSKF2oyu6OYg?w=177&h=196&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+            
+		    { id: 7, category: 'eyes', name: 'Earth Palette', price: 40000, description: '14 highly pigmented matte shades.', image: 'https://images.unsplash.com/photo-1547934659-7fa699ef3ce0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZXllc2hhZG93fGVufDB8fDB8fHww' },
+		    { id: 8, category: 'eyes', name: 'Brow Pencil', price: 29000, description: 'Slim pencil defines brows; comes soft, fine, or angled tips', image: 'https://th.bing.com/th/id/OIP.2b0QVgcF1_R1UFnhyee4ZAHaHa?w=184&h=184&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+		    { id: 5, category: 'eyes', name: 'Mascara', price: 38000, description: 'Lash enhancer boosts volume; comes lengthening, volumizing, or waterproof', image: 'https://th.bing.com/th/id/OIP.ULsVwlfBhD56uewy0_g5jwHaEK?w=333&h=187&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+		    { id: 5, category: 'eyes', name: 'Eyeliner', price: 27000, description: 'Precision liner frames eyes; comes pencil, liquid, or gel formulas', image: 'https://th.bing.com/th/id/OIP.U1c89kuz-2aOJt6Z3HqNmQHaEK?w=271&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+		    { id: 5, category: 'eyes', name: 'Brow Gel', price: 36000, description: 'Taming gel shapes brows; comes clear, tinted, or fiber-infused', image: 'https://th.bing.com/th/id/OIP.uXrZufz3-njpx0nH0xM7WwHaHa?w=202&h=203&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+		    { id: 5, category: 'eyes', name: 'Eye Primer', price: 31000, description: 'Base smooths lids for color; comes matte, luminous, or long-wear formulas', image: 'https://th.bing.com/th/id/OIP.weFdItMa0gHT3Bm4UaCHKgHaHa?w=185&h=186&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+		    { id: 5, category: 'eyes', name: 'Eyelashes', price: 24000, description: 'Fluttery lash add-ons enhance eyes; comes natural, dramatic, or volume packs', image: 'https://th.bing.com/th/id/OIP.3gv4Gt7QrtFpjRRC0EM3AgHaHa?w=187&h=187&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+            
+			{ id: 6, category: 'face', name: 'Silk Foundation', price: 75000, description: 'Natural coverage for all skin types.', image: 'https://plus.unsplash.com/premium_photo-1678932075247-2d5e29363a3f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDh8fGZvdW5kYXRpb24lMjBtYWtldXB8ZW58MHx8MHx8fDA%3D' },
+			{ id: 6, category: 'face', name: 'Concealer', price: 40000, description: 'Targeted coverage hides flaws; comes liquid, cream, or stick', image: 'https://th.bing.com/th/id/OIP.S8wRaf13BLKVxNi-S6QK3QHaI4?w=144&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Liquid / Cream Blush', price: 66000, description: 'Soft color flushes cheeks; comes dewy, natural, or buildable', image: 'https://th.bing.com/th/id/OIP.VsWQert6lSFrJCX0BaOWOgHaJk?w=153&h=199&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Liquid Highlighter', price: 47000, description: 'Glow enhancer reflects light; comes subtle, radiant, or intense shine', image: 'https://th.bing.com/th/id/OIP.t8l8DRkR0aD-C7NrX7rdXAHaEK?w=333&h=187&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Liquid / Cream Contour', price: 68000, description: 'Sculpting formula defines face; comes cool-tone or warm shades', image: 'https://th.bing.com/th/id/OIF.jT6BdRSmhgYacthsKnDlqQ?w=214&h=215&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Setting Powder', price: 28000, description: 'Fine powder sets makeup; comes loose or pressed formulas', image: 'https://th.bing.com/th/id/OIF.ZLWIuQTiBkm7pZn5tkYzRA?w=149&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Compact Powder', price: 59000, description: 'Pressed powder smooths skin; comes matte or natural finish', image: 'https://th.bing.com/th/id/OIP.nUJBt7zuy-X0COsy-hk-AAHaHa?w=213&h=213&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Powder Bronzer', price: 34000, description: 'Warm powder adds sun-kissed glow; comes matte or shimmer', image: 'https://th.bing.com/th/id/OIP.v-CJTzk3byRNdgYN98_MQgHaD4?w=324&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Setting Spray', price: 45000, description: 'Mist locks makeup in place; comes matte, glow, or long-wear', image: 'https://th.bing.com/th/id/OIP._5oNUICmSRuZHPY1SJq3kQHaHa?w=182&h=187&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Makeup Sponge', price: 33000, description: 'Soft blender evens base; comes classic, mini, or angled shapes', image: 'https://th.bing.com/th?id=OIF.7zEzToB5Rn7Y1RDSS%2fHIRw&w=160&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Face Brushes', price: 46000, description: 'Brush tools apply makeup; comes foundation, powder, or contour types', image: 'https://th.bing.com/th/id/OIP.fYZVHe57JbFqWoouVXBDxQHaHa?w=180&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Cleanser', price: 36000, description: 'Gentle wash removes dirt; comes gel, foam, or cream formulas', image: 'https://th.bing.com/th/id/OIP.0cRD2FCr-btVZDWU0aIB9QHaHa?w=172&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Toner', price: 50000, description: 'Light liquid balances skin; comes hydrating, calming, or exfoliating', image: 'https://th.bing.com/th/id/OIF.ebahuxv7iWJsBFXFzHDQYg?w=115&h=144&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Face Serum', price: 56000, description: 'Concentrated treatment targets skin; comes brightening, anti-aging, or hydrating', image: 'https://th.bing.com/th/id/OIP.1G-jmjqvES2A6BrFn3if8gHaE8?w=261&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Moisturizer', price: 67000, description: 'Cream locks in moisture; comes gel, lotion, or rich textures', image: 'https://th.bing.com/th?id=OIF.B6HD1qg7%2barVxbdg6HuYAw&w=120&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Sunscreen', price: 48000, description: 'Protective formula shields skin; comes matte, glow, or tinted SPF', image: 'https://th.bing.com/th?q=La+Roche+Posay+Sunscreen+Face&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&ucfimg=1&mkt=en-XA&cc=SA&setlang=en&adlt=strict&t=1&mw=247' },
+			{ id: 6, category: 'face', name: 'Face Scrub / Exfoliator', price: 53000, description: 'Exfoliating formula smooths skin; comes physical or chemical exfoliants', image: 'https://th.bing.com/th/id/OIP.QpA4qc9CZkpDf608dAMADAHaHa?w=144&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			{ id: 6, category: 'face', name: 'Face Mask', price: 23000, description: 'Treatment mask boosts skin; comes clay, sheet, or gel masks', image: 'https://th.bing.com/th/id/OIP.Bf_ETmGL7W70XitxM-cdRwHaEV?w=293&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.3&pid=1.7&rm=3&ucfimg=1' },
+			
+            
+			{ id: 7, category: 'face', name: 'Soft Blush', price: 12000, description: 'A touch of fresh pink radiance.', image: 'https://plus.unsplash.com/premium_photo-1726840825289-8de3e79e42d5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }
+        ];
+
+        let cart = [];
+        let currentCategory = 'all';
+        let currentUser = null;
+
+        // 2. Render Products based on filter
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
+            
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card rounded-2xl p-4 flex flex-col h-full">
+                    <img class="w-full h-48 object-cover rounded-xl mb-4" src="${p.image}">
+                    <h3 class="text-lg font-bold text-luxury mb-1">${p.name}</h3>
+                    <p class="text-gray-400 text-xs mb-4 line-clamp-2">${p.description}</p>
+                    <div class="flex justify-between items-center mt-auto pt-3 border-t border-rose-50">
+                        <span class="text-xl font-bold text-luxury">${p.price.toLocaleString()} <small class="text-[10px]">SDG</small></span>
+                        <button onclick="addToCart(${p.id})" class="accent-bg text-white p-2 rounded-full shadow-md hover:opacity-80 transition">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // 3. Category Filter Function (Global Scope)
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            
+            // UI Button Active State
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`cat-${cat}`).classList.add('active');
+            
+            renderProducts();
+        };
+
+        // 4. Cart Logic
+        window.addToCart = (id) => {
+            const p = products.find(x => x.id === id);
+            const exist = cart.find(item => item.id === id);
+            if(exist) exist.qty++; else cart.push({...p, qty: 1});
+            updateUI();
+            openCart();
+        };
+
+        window.updateQty = (id, delta) => {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+                updateUI();
+            }
+        };
+
+        function updateUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between mb-4 pb-4 border-b">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">
+                        <div>
+                            <h4 class="text-sm font-bold">${item.name}</h4>
+                            <span class="text-xs text-gray-400">${item.price.toLocaleString()} SDG</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 bg-rose-50 rounded flex items-center justify-center">-</button>
+                        <span class="text-xs font-bold">${item.qty}</span>
+                        <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 bg-rose-50 rounded flex items-center justify-center">+</button>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center text-gray-400 mt-10">Your bag is empty.</p>';
+
+            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            document.getElementById('cart-total').innerText = `${total.toLocaleString()} SDG`;
+            document.getElementById('cart-count').innerText = cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        // 5. UI Controls
+        const sidebar = document.getElementById('cart-sidebar');
+        const overlay = document.getElementById('cart-overlay');
+        const authModal = document.getElementById('auth-modal');
+        const checkoutModal = document.getElementById('checkout-modal');
+
+        const openCart = () => { sidebar.classList.remove('translate-x-full'); overlay.classList.remove('hidden'); };
+        const closeCart = () => { sidebar.classList.add('translate-x-full'); overlay.classList.add('hidden'); };
+
+        document.getElementById('open-cart-btn').onclick = openCart;
+        document.getElementById('close-cart-btn').onclick = closeCart;
+        overlay.onclick = closeCart;
+
+        document.getElementById('open-auth-btn').onclick = () => authModal.style.display = 'flex';
+        document.getElementById('close-auth').onclick = () => authModal.style.display = 'none';
+        document.getElementById('close-checkout').onclick = () => checkoutModal.style.display = 'none';
+
+        // 6. User Auth & Orders
+        window.processLogin = () => {
+            currentUser = { name: 'Guest' };
+            authModal.style.display = 'none';
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('user-section').classList.remove('hidden');
+            document.getElementById('username-display').innerText = `Hello, ${currentUser.name}`;
+        };
+
+        window.logout = () => {
+            currentUser = null;
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('user-section').classList.add('hidden');
+        };
+
+        document.getElementById('checkout-btn').onclick = () => {
+            if (!currentUser) { authModal.style.display = 'flex'; return; }
+            if (cart.length === 0) return;
+            closeCart();
+            checkoutModal.style.display = 'flex';
+            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            document.getElementById('checkout-summary').innerText = `Total Order: ${total.toLocaleString()} SDG`;
+        };
+
+        window.confirmOrder = () => {
+            alert('Order received! Thank you for shopping with Lamsa.');
+            checkoutModal.style.display = 'none';
+            cart = [];
+            updateUI();
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderProducts();
+        });
+    </script>
+
+    <a href="https://wa.me/249900000000" target="_blank" 
+   class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
+    <i data-lucide="message-circle" class="w-7 h-7"></i>
+    <span class="absolute right-16 bg-white text-gray-800 text-xs font-bold px-3 py-1 rounded-lg shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity md:block hidden">
+        Chat with us
+    </span>
+</a>
+</body>
+</html>  
