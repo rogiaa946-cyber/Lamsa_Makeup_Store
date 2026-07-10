@@ -1,0 +1,46 @@
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #fffaf9;
+        }
+
+        /* Modal Overlay styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .product-card {
+            transition: all 0.4s ease;
+            border: 1px solid #f3e8e6;
+            background-color: #ffffff;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(180, 140, 130, 0.2);
+        }
+
+        .header-bg {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #f3e8e6;
+        }
+
+        .accent-color { color: #b48c82; }
+        .accent-bg { background-color: #b48c82; }
+        .accent-hover:hover { background-color: #9a756b; }
+        .text-luxury { color: #4a3733; }
+
+        .category-btn.active {
+            background-color: #b48c82;
+            color: white;
+            box-shadow: 0 4px 12px rgba(180, 140, 130, 0.3);
+        }
+    
