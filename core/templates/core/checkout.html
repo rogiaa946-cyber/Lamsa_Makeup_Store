@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Lamsa Beauty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #fffaf9; }
+        .header-bg { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #f3e8e6; }
+        .accent-bg { background-color: #b48c82; }
+        .text-luxury { color: #4a3733; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="header-bg sticky top-0 z-20">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-luxury tracking-tighter italic cursor-pointer">
+                <a href="/">LAMSA</a>
+            </h1>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 max-w-md">
+        <h2 class="text-3xl font-bold text-luxury mb-8">Checkout Information</h2>
+        
+        <form method="POST" class="bg-white border border-rose-100 rounded-2xl p-6 shadow-sm flex flex-col gap-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-bold text-luxury mb-2">Full Name</label>
+                <input type="text" name="name" required class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-amber-700">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-luxury mb-2">Phone Number</label>
+                <input type="text" name="phone" required class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-amber-700">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-luxury mb-2">Delivery Address</label>
+                <textarea name="address" required rows="3" class="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-amber-700"></textarea>
+            </div>
+            <div class="border-t pt-4 mt-2 flex justify-between items-center">
+                <span class="font-bold text-luxury">Total Amount:</span>
+                <span class="text-xl font-extrabold text-amber-700">{{ total_price }} SDG</span>
+            </div>
+            <button type="submit" class="w-full accent-bg text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:opacity-90 transition mt-4">
+                Place Order
+            </button>
+        </form>
+    </main>
+
+</body>
+</html>
