@@ -1,4 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404 
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
 from .models import Product, Category, Cart, CartItem, Order, OrderItem
 
 def home(request):
@@ -85,3 +88,49 @@ def checkout(request):
         'cart': cart,
         'total_price': total_price
     })
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+
+    return render(request, 'core/login.html')
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+
+        if not username or not email or not password:
+            messages.error(request, "يرجى ملء جميع الحقول.")
+            return render(request, 'core/register.html')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "اسم المستخدم مستخدم بالفعل.")
+            return render(request, 'core/register.html')
+
+        User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        messages.success(request, "تم إنشاء الحساب بنجاح، يمكنك الآن تسجيل الدخول.")
+        return redirect('login')
+
+    return render(request, 'core/register.html')
+def logout_view(request):
+      logout(request)
+      return redirect('home')
+    

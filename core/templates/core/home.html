@@ -26,6 +26,24 @@
                 <a href="/">LAMSA</a>
             </h1>
             <div class="flex items-center gap-4">
+             {% if user.is_authenticated %}
+    <span class="text-[#4a3733] font-medium">
+        Welcome, {{ user.username }}
+    </span>
+
+    <a href="{% url 'logout' %}"
+       class="bg-[#b48c82] text-white px-5 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-[#9d766d] transition duration-300">
+        Logout
+    </a>
+
+{% else %}
+
+    <a href="{% url 'login' %}"
+       class="bg-[#b48c82] text-white px-5 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-[#9d766d] transition duration-300">
+        Login
+    </a>
+
+{% endif %}
                 <a href="{% url 'cart_detail' %}" class="flex items-center gap-2 bg-white border border-rose-100 px-4 py-2 rounded-full shadow-sm hover:bg-rose-50 transition">
                     <i data-lucide="shopping-bag" class="w-4 h-4 text-amber-700"></i>
                     <span class="text-sm font-bold text-luxury">Cart ({{ cart.items.count }})</span>
