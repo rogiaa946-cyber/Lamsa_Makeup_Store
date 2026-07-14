@@ -51,11 +51,9 @@
                 <span class="text-2xl font-extrabold text-amber-700">{{ total_price }} SDG</span>
             </div>
             <div class="mt-8">
-                <button class="w-full accent-bg text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:opacity-90 transition">
-                    <a href="{% url 'checkout' %}" class="w-full block text-center accent-bg text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:opacity-90 transition">
-                          Proceed to Checkout
-                    </a>
-                </button>
+                <a href="{% url 'checkout' %}" class="w-full inline-flex justify-center accent-bg text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:opacity-90 transition">
+                    Proceed to Checkout
+                </a>
             </div>
             {% endif %}
         </div>
@@ -66,3 +64,5 @@
     </script>
 </body>
 </html>
+
+  ++``
