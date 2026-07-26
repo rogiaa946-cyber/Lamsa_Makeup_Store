@@ -3,21 +3,27 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from .models import Product, Category, Cart, CartItem, Order, OrderItem
+from django.http import JsonResponse
 
 def home(request):
     category_id = request.GET.get('category')
+    search = request.GET.get('search')
+
+    products = Product.objects.all()
+
     if category_id:
-        products = Product.objects.filter(category_id=category_id)
-    else:
-        products = Product.objects.all()
-        
+        products = products.filter(category_id=category_id)
+
+    if search:
+        products = products.filter(name__icontains=search)
+
     categories = Category.objects.all()
-    
+
     cart_id = request.session.get('cart_id')
     cart, created = Cart.objects.get_or_create(id=cart_id)
     if created:
         request.session['cart_id'] = cart.id
-        
+
     return render(request, 'core/home.html', {
         'products': products,
         'categories': categories,
@@ -133,4 +139,21 @@ def register_view(request):
 def logout_view(request):
       logout(request)
       return redirect('home')
-    
+
+def search_products(request):
+    query = request.GET.get('q', '')
+
+    products = Product.objects.filter(name__icontains=query)
+
+    data = []
+
+    for product in products:
+        data.append({
+            'id': product.id,
+            'name': product.name,
+            'price': str(product.price),
+            'description': product.description,
+            'image': product.image_url,
+        })
+
+    return JsonResponse(data, safe=False)    

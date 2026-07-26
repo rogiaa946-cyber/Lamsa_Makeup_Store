@@ -60,6 +60,26 @@
         </div>
     </section>
 
+</section>
+
+<div class="container mx-auto px-4 mb-6">
+    <input
+        type="text"
+        id="search"
+        placeholder="Search products..."
+        class="w-full max-w-md mx-auto block border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#b48c82]">
+</div>
+
+<div class="container mx-auto px-4 py-4 flex justify-center gap-2 flex-wrap mb-6">
+    <a href="/" class="...">
+        All Products
+    </a>
+
+    {% for cat in categories %}
+    ...
+    {% endfor %}
+</div>
+
     <div class="container mx-auto px-4 py-4 flex justify-center gap-2 flex-wrap mb-6">
         <a href="/" class="px-5 py-2 rounded-full text-sm font-bold border {% if not selected_category %} accent-bg text-white {% else %} border-gray-200 text-gray-600 bg-white {% endif %}">
             All Products
