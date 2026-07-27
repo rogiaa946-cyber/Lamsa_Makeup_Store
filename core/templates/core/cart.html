@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart - Lamsa Beauty</title>
+    <title>Shopping Cart - Lamsa Beauty</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,53 +16,142 @@
         .text-luxury { color: #4a3733; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased flex flex-col min-h-screen">
 
+    <!-- Header -->
     <header class="header-bg sticky top-0 z-20">
         <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-3xl font-extrabold text-luxury tracking-tighter italic cursor-pointer">
                 <a href="/">LAMSA</a>
             </h1>
-            <a href="/" class="text-sm font-bold text-amber-700 hover:underline">Continue Shopping</a>
+            <a href="/" class="text-sm font-bold text-[#b48c82] hover:underline flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Continue Shopping
+            </a>
         </nav>
     </header>
 
-    <main class="container mx-auto px-4 py-12 max-w-2xl">
-        <h2 class="text-3xl font-bold text-luxury mb-8">Your Shopping Cart</h2>
-        
-        <div class="bg-white border border-rose-100 rounded-2xl p-6 shadow-sm">
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-3xl flex-grow">
+        <h2 class="text-2xl font-bold text-luxury mb-6 flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-6 h-6 text-[#b48c82]"></i> Your Shopping Cart
+        </h2>
+
+        <!-- Cart Items List -->
+        <div class="space-y-4 mb-8">
             {% for item in cart.items.all %}
-            <div class="flex justify-between items-center py-4 border-b border-rose-50 last:border-0">
-                <div>
-                    <h3 class="font-bold text-luxury text-lg">{{ item.product.name }}</h3>
-                    <p class="text-gray-400 text-sm">Quantity: {{ item.quantity }}</p>
+            <div class="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-rose-100">
+                
+                <!-- Product Details -->
+                <div class="flex items-center gap-4">
+                    {% if item.product.image_url %}
+                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded-xl border">
+                    {% endif %}
+                    <div>
+                        <h4 class="font-bold text-luxury text-base">{{ item.product.name }}</h4>
+                        <p class="text-xs text-[#b48c82] font-semibold mt-1">{{ item.product.price }} SDG</p>
+                    </div>
                 </div>
-                <span class="font-bold text-luxury text-lg">{{ item.product.price }} SDG</span>
+
+                <!-- Quantity Controls & Delete Button -->
+                <div class="flex items-center gap-4">
+                    <!-- Plus / Minus Quantity Buttons -->
+                    <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+                        <!-- Decrease Button -->
+                        <a href="{% url 'update_cart_quantity' item.id 'decrease' %}" 
+                           class="px-3 py-1 text-gray-600 hover:bg-rose-100 text-sm font-bold transition">-</a>
+                        
+                        <!-- Current Quantity -->
+                        <span class="px-3 py-1 text-xs font-bold text-gray-700 bg-white">{{ item.quantity }}</span>
+                        
+                        <!-- Increase Button -->
+                        <a href="{% url 'update_cart_quantity' item.id 'increase' %}" 
+                           class="px-3 py-1 text-gray-600 hover:bg-rose-100 text-sm font-bold transition">+</a>
+                    </div>
+
+                    <!-- Delete Button -->
+                    <a href="{% url 'remove_from_cart' item.id %}" 
+                       class="text-red-400 hover:text-red-600 p-2 rounded-xl hover:bg-red-50 transition"
+                       title="Remove item">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </a>
+                </div>
             </div>
             {% empty %}
-            <div class="text-center py-8">
-                <p class="text-gray-400">Your cart is empty.</p>
-            </div>
-            {% endfor %}
-            
-            {% if cart.items.all %}
-            <div class="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center">
-                <span class="text-xl font-bold text-luxury">Total:</span>
-                <span class="text-2xl font-extrabold text-amber-700">{{ total_price }} SDG</span>
-            </div>
-            <div class="mt-8">
-                <a href="{% url 'checkout' %}" class="w-full inline-flex justify-center accent-bg text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:opacity-90 transition">
-                    Proceed to Checkout
+            <!-- Empty Cart State -->
+            <div class="text-center py-12 bg-white rounded-2xl border border-rose-100 p-6">
+                <i data-lucide="shopping-cart" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
+                <p class="text-gray-500 font-medium text-sm">Your cart is currently empty.</p>
+                <a href="/" class="mt-4 inline-block accent-bg text-white px-6 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90 transition">
+                    Explore Products
                 </a>
             </div>
-            {% endif %}
+            {% endfor %}
         </div>
+
+        {% if cart.items.all %}
+        <!-- Total & Checkout Section -->
+        <div class="bg-white p-6 rounded-2xl border border-rose-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs text-gray-400 uppercase tracking-wider block">Total Amount</span>
+                <span class="text-2xl font-extrabold text-luxury">{{ total_price }} <small class="text-xs">SDG</small></span>
+            </div>
+            <a href="#" class="w-full md:w-auto accent-bg text-white px-8 py-3 rounded-full font-bold text-sm shadow-md hover:opacity-90 transition text-center">
+                Proceed to Checkout
+            </a>
+        </div>
+        {% endif %}
     </main>
 
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-8 text-gray-600">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6 text-center md:text-left">
+                <div>
+                    <h3 class="text-sm font-bold text-[#4a3733] uppercase tracking-wider mb-3">LAMSA Beauty</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed">
+                        Your favorite store for skincare and cosmetics. Providing you with top-quality products for long-lasting elegance and beauty.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-[#4a3733] uppercase tracking-wider mb-3">Support & Contact</h3>
+                    <ul class="text-xs space-y-2">
+                        <li class="flex items-center justify-center md:justify-start gap-2">
+                            <i data-lucide="phone" class="w-4 h-4 text-[#b48c82]"></i>
+                            <a href="#" onclick="event.preventDefault()" class="hover:text-[#b48c82] transition">
+                                WhatsApp: +249 912 345 678
+                            </a>
+                        </li>
+                        <li class="flex items-center justify-center md:justify-start gap-2">
+                            <i data-lucide="mail" class="w-4 h-4 text-[#b48c82]"></i>
+                            <span>support@lamsabeauty.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-[#4a3733] uppercase tracking-wider mb-3">Follow Us</h3>
+                    <div class="flex justify-center md:justify-start gap-4">
+                        <a href="#" onclick="event.preventDefault()" title="Instagram" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#b48c82] hover:text-white transition">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" onclick="event.preventDefault()" title="Facebook" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#b48c82] hover:text-white transition">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" onclick="event.preventDefault()" title="Twitter" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#b48c82] hover:text-white transition">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 pt-4 text-center text-[11px] text-gray-400">
+                &copy; 2026 Lamsa Beauty Sudan. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     <script>
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
-
-  ++``
