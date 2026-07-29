@@ -10,18 +10,23 @@ from .models import Cart, CartItem
 
 def home(request):
     category_id = request.GET.get('category')
+    search = request.GET.get('search')
+
+    products = Product.objects.all()
+
     if category_id:
-        products = Product.objects.filter(category_id=category_id)
-    else:
-        products = Product.objects.all()
-        
+        products = products.filter(category_id=category_id)
+
+    if search:
+        products = products.filter(name__icontains=search)
+
     categories = Category.objects.all()
-    
+
     cart_id = request.session.get('cart_id')
     cart, created = Cart.objects.get_or_create(id=cart_id)
     if created:
         request.session['cart_id'] = cart.id
-        
+
     return render(request, 'core/home.html', {
         'products': products,
         'categories': categories,
@@ -225,3 +230,20 @@ def remove_from_cart(request, item_id):
         })
 
     return redirect('cart_detail')
+def search_products(request):
+    query = request.GET.get('q', '')
+
+    products = Product.objects.filter(name__icontains=query)
+
+    data = []
+
+    for product in products:
+        data.append({
+            'id': product.id,
+            'name': product.name,
+            'price': str(product.price),
+            'description': product.description,
+            'image': product.image_url,
+        })
+
+    return JsonResponse(data, safe=False)    
