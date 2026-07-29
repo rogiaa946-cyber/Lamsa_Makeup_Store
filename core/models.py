@@ -20,12 +20,16 @@ class Product(models.Model):
     def str(self):
         return self.name
 
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def str(self):
         return f"Cart {self.id}"
+
+    def get_total_price(self):
+        return sum(item.product.price * item.quantity for item in self.items.all())
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
