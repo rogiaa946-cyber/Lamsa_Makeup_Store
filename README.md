@@ -7,7 +7,7 @@ Online makeup store.
 | Name | Student ID |
 |------|-----------:|
 | Rogia Ahmed Abdeljalil | 21-618 |
-| Aliya Alislam Abbas | 21-623 |
+| Aliaa Alislam Abbas | 21-623 |
 | Nasreen Saleh Ahmed | 18-669 |
 
 ---
@@ -120,43 +120,64 @@ http://127.0.0.1:8000/
 # Screenshots
 
 
-### Login Page
-
-*(Insert Screenshot)*
-
 ### Home Page
 
+![Home](screenshots/home.png)
 
+### Login Page
+
+![Login](screenshots/login.png)
+
+### Singup Page
+
+![Sign Up](screenshots/singup.png)
 
 ### Product List
 
-*(Insert Screenshot)*
+![Product List](screenshots/product-list.png)
 
 ### Add Product (CRUD)
 
-*(Insert Screenshot)*
+![Add Product](screenshots/add-product.jpg)
 
 ### Update Product
 
-*(Insert Screenshot)*
+![Update Product](screenshots/update-price.jpg)
 
 ### Delete Product
 
-*(Insert Screenshot)*
+![Delete Product](screenshots/delete-product.jpg)
+
+### Add Category
+
+![Add Category](screenshots/add-catgory.jpg)
 
 ### Search Products
 
-*(Insert Screenshot)*
+![Search](screenshots/search.png)
+
 
 ### Shopping Cart
 
-*(Insert Screenshot)*
+![Shopping cart](screenshots/cart.png)
+
+![Shopping cart](screenshots/cart2.png)
+
+### Checkout
+
+![Checkout1](screenshots/checkout1.png)
+
+![Checkout2](screenshots/checkout2.png)
+
+### Checkout Sucesse
+
+![Checkout-sucesse](screenshots/checkout-sucesse.png)
 
 ---
 
 # Project Structure
 
-```text
+```test
 LAMSA/
 │
 ├── core/
@@ -168,6 +189,7 @@ LAMSA/
 ├── db.sqlite3
 ├── manage.py
 ├── requirements.txt
-└── README.md
+├── README.md
+└── screenshoots
 ```
 
