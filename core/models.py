@@ -5,7 +5,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
 
-    def str(self): # <-- هنا
+    def str(self):
         return self.name
 
 class Product(models.Model):
@@ -17,22 +17,26 @@ class Product(models.Model):
     stock = models.IntegerField(default=10)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def str(self): # <-- هنا
+    def str(self):
         return self.name
+
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def str(self): # <-- هنا
+    def str(self):
         return f"Cart {self.id}"
+
+    def get_total_price(self):
+        return sum(item.product.price * item.quantity for item in self.items.all())
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
-    def str(self): # <-- هنا
+    def str(self):
         return f"{self.quantity} x {self.product.name}"
 
 class Order(models.Model):
@@ -42,7 +46,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def str(self): # <-- هنا
+    def str(self):
         return f"Order {self.id} by {self.name}"
 
 class OrderItem(models.Model):
@@ -51,5 +55,5 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def str(self): # <-- هنا
+    def str(self):
         return f"{self.quantity} x {self.product.name}"

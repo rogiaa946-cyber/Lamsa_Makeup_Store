@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from .models import Product, Category, Cart, CartItem, Order, OrderItem
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from .models import Cart, CartItem
 
 def home(request):
     category_id = request.GET.get('category')
@@ -32,7 +36,7 @@ from .models import Product, Cart, CartItem
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
-    # جلب السلة أو إنشاؤها وتثبيتها في الـ Session
+    
     cart_id = request.session.get('cart_id')
     if cart_id:
         cart, _ = Cart.objects.get_or_create(id=cart_id)
@@ -40,24 +44,39 @@ def add_to_cart(request, product_id):
         cart = Cart.objects.create()
         request.session['cart_id'] = cart.id
 
-    # البحث عن المنتج في السلة أو إضافة عنصر جديد
     cart_item, item_created = CartItem.objects.get_or_create(
         cart=cart, 
         product=product,
         defaults={'quantity': 1}
     )
     
-    # إذا كان المنتج موجوداً سابقاً -> زيادة الكمية بمقدار 1
+    
     if not item_created:
         if cart_item.quantity < product.stock:
             cart_item.quantity += 1
             cart_item.save()
         else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'Stock limit reached for {product.name}'
+                }, status=400)
             messages.warning(request, f"الكمية المطلوبة غير متوفرة في المخزون لـ {product.name}")
             return redirect('home')
-            
-    return redirect('home')
 
+    
+    total_items = cart.items.count()
+
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'cart_count': total_items,
+            'message': f'Added {product.name} to cart!'
+        })
+
+    
+    return redirect('home')
 
 def cart_detail(request):
     cart_id = request.session.get('cart_id')
@@ -155,27 +174,54 @@ def register_view(request):
 def logout_view(request):
       logout(request)
       return redirect('home')
-def remove_from_cart(request, item_id):
-    """دالة لحذف المنتج نهائياً من السلة"""
-    cart_item = get_object_or_404(CartItem, id=item_id)
-    cart_item.delete()
-    return redirect('cart_detail')
 
 def update_cart_quantity(request, item_id, action):
-    """دالة لزيادة أو إنقاص الكمية بضغطة زر (+ / -)"""
-    cart_item = get_object_or_404(CartItem, id=item_id)
-    
+    item = get_object_or_404(CartItem, id=item_id)
+    cart = item.cart
+
     if action == 'increase':
-        if cart_item.quantity < cart_item.product.stock:
-            cart_item.quantity += 1
-            cart_item.save()
+        item.quantity += 1
+        item.save()
     elif action == 'decrease':
-        if cart_item.quantity > 1:
-            cart_item.quantity -= 1
-            cart_item.save()
+        if item.quantity > 1:
+            item.quantity -= 1
+            item.save()
         else:
-            # لو الكمية وصلت 1 وضغط ناقص، يتم حذف المنتج من السلة
-            cart_item.delete()
-            
+            item.delete()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'status': 'success',
+                    'action': 'delete',
+                    'item_id': item_id,
+                    'total_price': cart.get_total_price(),
+                    'cart_count': cart.items.count()
+                })
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'action': action,
+            'item_id': item_id,
+            'quantity': item.quantity,
+            'total_price': cart.get_total_price(),
+            'cart_count': cart.items.count()
+        })
+
     return redirect('cart_detail')
-    
+
+
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    cart = item.cart
+    item.delete()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'action': 'delete',
+            'item_id': item_id,
+            'total_price': cart.get_total_price(),
+            'cart_count': cart.items.count()
+        })
+
+    return redirect('cart_detail')
