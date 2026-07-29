@@ -66,7 +66,7 @@ def add_to_cart(request, product_id):
                     'status': 'error', 
                     'message': f'Stock limit reached for {product.name}'
                 }, status=400)
-            messages.warning(request, f"الكمية المطلوبة غير متوفرة في المخزون لـ {product.name}")
+            messages.warning(request, f"The requested quantity for {product.name} is not available in stock.")
             return redirect('home')
 
     
@@ -159,11 +159,11 @@ def register_view(request):
         password = request.POST.get('password', '')
 
         if not username or not email or not password:
-            messages.error(request, "يرجى ملء جميع الحقول.")
+            messages.error(request, "Please fill in all fields.")
             return render(request, 'core/register.html')
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "اسم المستخدم مستخدم بالفعل.")
+            messages.error(request, "Username is already taken.")
             return render(request, 'core/register.html')
 
         User.objects.create_user(
@@ -172,7 +172,7 @@ def register_view(request):
             password=password
         )
 
-        messages.success(request, "تم إنشاء الحساب بنجاح، يمكنك الآن تسجيل الدخول.")
+        messages.success(request, "Account created successfully, you can now log in.")
         return redirect('login')
 
     return render(request, 'core/register.html')
